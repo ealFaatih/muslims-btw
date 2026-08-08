@@ -310,3 +310,69 @@ section {
   color: var(--color-text-light);
   margin-top: 0.2rem;
 }
+
+.upcoming__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.event-card {
+  background-color: var(--color-white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.event-card__poster {
+  height: 140px;
+  background: linear-gradient(135deg, var(--color-primary), #144f6e);
+  display: flex;
+  align-items: flex-end;
+  padding: 1rem;
+}
+
+.event-card__badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  color: var(--color-primary);
+}
+
+.event-card__open {
+  background-color: var(--color-accent);
+}
+
+.event-card__soon {
+  background-color: #ffd966;
+}
+
+.event-card__body {
+  padding: 1.2rem;
+}
+
+.event-card__title {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  color: var(--color-primary);
+  margin-bottom: 0.4rem;
+}
+
+.event-card__meta {
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+  margin-bottom: 0.8rem;
+}
+
+.event-card__desc {
+  font-size: 0.92rem;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+}
+
+.btn--outline-primary {
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
+}
