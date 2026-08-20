@@ -13,3 +13,5 @@ WHERE NOT EXISTS (
 );
 
 SELECT * FROM testimoni;
+
+DELETE FROM testimoni WHERE id = 3;

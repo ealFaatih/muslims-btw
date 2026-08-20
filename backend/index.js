@@ -5,6 +5,8 @@ const kegiatanRoutes = require("./routes/kegiatan");
 const cors = require("cors");
 const dokumentasiRoutes = require("./routes/dokumentasi");
 const testimoniRoutes = require("./routes/testimoni");
+const faqRoutes = require("./routes/faq");
+const pengaduanRoutes = require("./routes/pengaduan");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,6 +16,8 @@ app.use(express.json());
 app.use("/api/kegiatan", kegiatanRoutes);
 app.use("/api/dokumentasi", dokumentasiRoutes);
 app.use("/api/testimoni", testimoniRoutes);
+app.use("/api/faq", faqRoutes);
+app.use("/api/pengaduan", pengaduanRoutes);
 
 app.get("/", (req, res) => {
   res.end("Server Muslims Btw backend jalan!");
