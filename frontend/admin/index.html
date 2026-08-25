@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="assets/css/admin.css" />
   </head>
   <body>
-
     <!-- Form Login -->
     <section id="loginSection" class="admin-login">
       <form id="loginForm" class="admin-login__form">
@@ -37,7 +36,68 @@
       </header>
 
       <div id="dashboardContent">
-        <p>Selamat datang! Dashboard ini masih dalam pengembangan.</p>
+        <section class="admin-section">
+          <div class="admin-section__header">
+            <h2>Kelola Kegiatan</h2>
+            <button id="btnTambahKegiatan" class="btn btn--primary">
+              + Tambah Kegiatan
+            </button>
+          </div>
+
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Judul</th>
+                <th>Tanggal</th>
+                <th>Lokasi</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tabelKegiatan">
+              <!-- Diisi otomatis lewat JavaScript -->
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Modal form tambah kegiatan -->
+        <div id="modalKegiatan" class="admin-modal" hidden>
+          <div class="admin-modal__box">
+            <h3>Tambah Kegiatan Baru</h3>
+            <form id="formKegiatan">
+              <div class="form__group">
+                <label for="fJudul">Judul</label>
+                <input type="text" id="fJudul" required />
+              </div>
+              <div class="form__group">
+                <label for="fDeskripsi">Deskripsi</label>
+                <textarea id="fDeskripsi" rows="3" required></textarea>
+              </div>
+              <div class="form__group">
+                <label for="fTanggal">Tanggal</label>
+                <input type="date" id="fTanggal" required />
+              </div>
+              <div class="form__group">
+                <label for="fLokasi">Lokasi</label>
+                <input type="text" id="fLokasi" required />
+              </div>
+              <div class="form__group">
+                <label for="fKuota">Kuota</label>
+                <input type="number" id="fKuota" />
+              </div>
+              <div class="admin-modal__actions">
+                <button
+                  type="button"
+                  id="btnBatalKegiatan"
+                  class="btn btn--outline-primary"
+                >
+                  Batal
+                </button>
+                <button type="submit" class="btn btn--primary">Simpan</button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </section>
 
