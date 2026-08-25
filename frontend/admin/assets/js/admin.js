@@ -153,5 +153,32 @@ formKegiatan.addEventListener("submit", async function (e) {
   }
 });
 
+// Hapus kegiatan (Event Delegation)
+tabelKegiatan.addEventListener("click", async function (e) {
+  if (!e.target.classList.contains("btn--hapus")) return;
+
+  const id = e.target.dataset.id;
+  const konfirmasi = confirm("Yakin ingin menghapus kegiatan ini?");
+  if (!konfirmasi) return;
+
+  const token = localStorage.getItem("adminToken");
+
+  try {
+    const response = await fetch(`${API_BASE}/kegiatan/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!response.ok) {
+      const hasil = await response.json();
+      alert("Gagal menghapus: " + hasil.pesan);
+    }
+
+    muatDaftarKegiatan();
+  } catch (error) {
+    alert("Terjadi kesalahan koneksi.");
+  }
+});
+
 // Jalankan pengecekan begitu halaman dibuka
 cekStatusLogin();
