@@ -6,6 +6,13 @@ const loginForm = document.getElementById("loginForm");
 const loginError = document.getElementById("loginError");
 const logoutBtn = document.getElementById("logoutBtn");
 
+// Elemen kelola kegiatan
+const modalKegiatan = document.getElementById("modalKegiatan");
+const btnTambahKegiatan = document.getElementById("btnTambahKegiatan");
+const btnBatalKegiatan = document.getElementById("btnBatalKegiatan");
+const formKegiatan = document.getElementById("formKegiatan");
+const tabelKegiatan = document.getElementById("tabelKegiatan");
+
 // Cek status login saat halaman dibuka
 function cekStatusLogin() {
   const token = localStorage.getItem("adminToken");
@@ -19,6 +26,7 @@ function cekStatusLogin() {
 function tampilkanDashboard() {
   loginSection.hidden = true;
   dashboardSection.hidden = false;
+  muatDaftarKegiatan();
 }
 
 function tampilkanLogin() {
@@ -60,6 +68,89 @@ loginForm.addEventListener("submit", async function (e) {
 logoutBtn.addEventListener("click", function () {
   localStorage.removeItem("adminToken");
   tampilkanLogin();
+});
+
+// Buka / Tutup modal kegiatan
+btnTambahKegiatan.addEventListener("click", () => {
+  modalKegiatan.classList.add("is-open");
+  formKegiatan.reset();
+});
+
+btnBatalKegiatan.addEventListener("click", () => {
+  modalKegiatan.classList.remove("is-open");
+  formKegiatan.reset();
+});
+
+// Ambil & Tampilkan daftar kegiatan
+async function muatDaftarKegiatan() {
+  try {
+    const response = await fetch(`${API_BASE}/kegiatan`);
+    const daftarKegiatan = await response.json();
+
+    if (daftarKegiatan.length === 0) {
+      tabelKegiatan.innerHTML =
+        '<tr><td colspan="5">Belum ada kegiatan.</td></tr>';
+      return;
+    }
+
+    tabelKegiatan.innerHTML = daftarKegiatan
+      .map(
+        (k) => `
+      <tr>
+        <td>${k.judul}</td>
+        <td>${new Date(k.tanggal).toLocaleDateString("id-ID")}</td>
+        <td>${k.lokasi}</td>
+        <td>${k.status_pendaftaran}</td>
+        <td><button class="btn--hapus" data-id="${k.id}">Hapus</button></td>
+      </tr>
+    `,
+      )
+      .join("");
+  } catch (error) {
+    tabelKegiatan.innerHTML =
+      '<tr><td colspan="5">Gagal memuat data.</td></tr>';
+    console.error(error);
+  }
+}
+
+// Submit form tambah kegiatan
+formKegiatan.addEventListener("submit", async function (e) {
+  e.preventDefault();
+  const token = localStorage.getItem("adminToken");
+
+  const data = {
+    judul: document.getElementById("fJudul").value,
+    deskripsi: document.getElementById("fDeskripsi").value,
+    tanggal: document.getElementById("fTanggal").value,
+    lokasi: document.getElementById("fLokasi").value,
+    kuota: document.getElementById("fKuota").value || null,
+    status_pendaftaran: "Dibuka",
+    poster_url: null,
+  };
+
+  try {
+    const response = await fetch(`${API_BASE}/kegiatan`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const hasil = await response.json();
+      alert("Gagal manambah kegiatan: " + hasil.pesan);
+      return;
+    }
+
+    modalKegiatan.classList.remove("is-open");
+    formKegiatan.reset();
+    muatDaftarKegiatan();
+  } catch (error) {
+    alert("Terjadi kesalahan koneksi.");
+    console.error(error);
+  }
 });
 
 // Jalankan pengecekan begitu halaman dibuka
