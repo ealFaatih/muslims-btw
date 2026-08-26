@@ -169,3 +169,21 @@
   gap: 0.8rem;
   justify-content: flex-end;
 }
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.status-badge--baru {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.status-badge--selesai {
+  background-color: #dcfce7;
+  color: #16a34a;
+}

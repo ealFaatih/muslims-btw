@@ -5,6 +5,7 @@ const dashboardSection = document.getElementById("dashboardSection");
 const loginForm = document.getElementById("loginForm");
 const loginError = document.getElementById("loginError");
 const logoutBtn = document.getElementById("logoutBtn");
+const tabelPengaduan = document.getElementById("tabelPengaduan");
 
 // Elemen kelola kegiatan
 const modalKegiatan = document.getElementById("modalKegiatan");
@@ -27,6 +28,7 @@ function tampilkanDashboard() {
   loginSection.hidden = true;
   dashboardSection.hidden = false;
   muatDaftarKegiatan();
+  muatDaftarPengaduan();
 }
 
 function tampilkanLogin() {
@@ -109,6 +111,48 @@ async function muatDaftarKegiatan() {
   } catch (error) {
     tabelKegiatan.innerHTML =
       '<tr><td colspan="5">Gagal memuat data.</td></tr>';
+    console.error(error);
+  }
+}
+
+// Ambil & Tampilkan daftar pengaduan
+async function muatDaftarKegiatan() {
+  const token = localStorage.getItem("adminToken");
+
+  try {
+    const response = await fetch(`${API_BASE}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!response.ok) {
+      tabelPengaduan.innerHTML =
+        '<tr><td colspan="5">Belum ada laporan masuk.</td></tr>';
+      return;
+    }
+
+    tabelPengaduan.innerHTML = daftarPengaduan
+      .map((p) => {
+        const statusClass =
+          p.status === "Selesai"
+            ? "status-badge--selesai"
+            : "status-badge--baru";
+        const namaTampil = p.nama || "(Tanpa nama)";
+        const kontak = p.no_wa ? `${p.email}<br>${p.no_wa}` : p.email;
+
+        return `
+      <tr>
+      <td>${new Date(p.created_at).toLocaleDateString("id-ID")}</td>
+      <td>${namaTampil}</td>
+      <td>${kontak}</td>
+      <td>${p.isi_laporan}</td>
+      <td><span class="status-badge ${statusClass}">${p.status}</span></td>
+      </tr>
+      `;
+      })
+      .join("");
+  } catch (error) {
+    tabelPengaduan.innerHTML =
+      '<tr><td colspan="5">Terjadi kesalahan koneksi.</td></tr>';
     console.error(error);
   }
 }
