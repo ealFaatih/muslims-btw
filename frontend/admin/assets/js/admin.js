@@ -14,6 +14,16 @@ const btnBatalKegiatan = document.getElementById("btnBatalKegiatan");
 const formKegiatan = document.getElementById("formKegiatan");
 const tabelKegiatan = document.getElementById("tabelKegiatan");
 
+// Elemen kelola dokumentasi
+const modalDokumentasi = document.getElementById("modalDokumentasi");
+const btnTambahDokumentasi = document.getElementById("btnTambahDokumentasi");
+const btnBatalDokumentasi = document.getElementById("btnBatalDokumentasi");
+const formDokumentasi = document.getElementById("formDokumentasi");
+const selectKegiatan = document.getElementById("dKegiatan");
+const tabelDokumentasi = document.getElementById("tabelDokumentasi");
+const uploadStatus = document.getElementById("uploadStatus");
+const btnSimpanDokumentasi = document.getElementById("btnSimpanDokumentasi");
+
 // Cek status login saat halaman dibuka
 function cekStatusLogin() {
   const token = localStorage.getItem("adminToken");
@@ -221,6 +231,102 @@ tabelKegiatan.addEventListener("click", async function (e) {
     muatDaftarKegiatan();
   } catch (error) {
     alert("Terjadi kesalahan koneksi.");
+  }
+});
+
+// Isi laporan kegiatan
+async function isiDropdownKegiatan() {
+  try {
+    const response = await fetch(`${API_BASE}/kegiatan`);
+    const daftarKegiatan = await response.json();
+
+    selectKegiatan.innerHTML =
+      '<option value="">-- Pilih Kegiatan --</option>' +
+      daftarKegiatan
+        .map((k) => `<option value="${k.id}">${k.judul}</option>`)
+        .join("");
+  } catch (error) {
+    console.error("Gagal memuat daftar kegiatan:", error);
+  }
+}
+
+// Buka / Tutup modal dokumentasi
+btnTambahDokumentasi.addEventListener("click", () => {
+  isiDropdownKegiatan();
+  modalDokumentasi.classList.add("is-open");
+});
+
+btnBatalDokumentasi.addEventListener("click", () => {
+  modalDokumentasi.classList.remove("is-open");
+  formDokumentasi.reset();
+  uploadStatus.textContent = "";
+});
+
+formDokumentasi.addEventListener("submit", async function (e) {
+  e.preventDefault();
+  const token = localStorage.getItem("adminToken");
+  const fileFoto = document.getElementById("dFoto").files;
+
+  if (fileFoto.length === 0) {
+    uploadStatus.textContent = "Pilih minimal 1 foto.";
+    return;
+  }
+
+  btnSimpanDokumentasi.disabled = true;
+  uploadStatus.textContent = `Mengupload ${fileFoto.length} foto, mohon tunggu...`;
+
+  try {
+    // Tahap 1 - Upload semua foto ke Cloudinary
+    const urlFotoSemua = [];
+    for (const file of fileFoto) {
+      const formData = new formData();
+      formData.append("foto", file);
+
+      const resUpload = await fetch(`${API_BASE}/upload`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
+
+      const hasilUpload = await resUpload.json();
+      if (!resUpload.ok) throw new Error(hasilUpload.pesan);
+
+      urlFotoSemua.push(hasilUpload.url);
+    }
+
+    // Tahap 2 - Simpan dokumentasi + Galeri ke database
+    uploadStatus.textContent = "Menyimpan dokumentasi...";
+
+    const dataDokumentasi = {
+      kegiatan_id: selectKegiatan.value,
+      deskripsi: document.getElementById("dDeskripsi").value,
+      tanggal: document.getElementById("dTanggal").value,
+      foto: urlFotoSemua,
+    };
+
+    const resSimpan = await fetch(`${API_BASE}/dokumentasi`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(dataDokumentasi),
+    });
+
+    if (!resSimpan.ok) {
+      const hasil = await resSimpan.json();
+      throw new Error(hasil.pesan);
+    }
+
+    modalDokumentasi.classList.remove("is-open");
+    formDokumentasi.reset();
+    uploadStatus.textContent = "";
+    muatDaftarDokumentasi();
+  } catch (error) {
+    uploadStatus.textContent = "Gagal: " + error.message;
+    console.error(error);
+  } finally {
+    btnSimpanDokumentasi.disabled = false;
   }
 });
 

@@ -81,6 +81,76 @@
           </table>
         </section>
 
+        <section class="admin-section" style="margin-top: 2rem">
+          <div class="admin-section__header">
+            <h2>Dokumentasi Kegiatan</h2>
+            <button id="btnTambahDokumentasi" class="btn btn--primary">
+              + Tambah Dokumentasi
+            </button>
+          </div>
+
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Kegiatan</th>
+                <th>Tanggal</th>
+                <th>Jumlah Foto</th>
+              </tr>
+            </thead>
+            <tbody id="tabelDokumentasi">
+              <!-- Diisi otomatis lewat JavaScript -->
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Modal form tambah dokumentasi -->
+        <div id="modalDokumentasi" class="admin-modal" hidden>
+          <div class="admin-modal__box">
+            <h3>Tambah Dokumentasi Kegiatan</h3>
+            <form id="formDokumentasi">
+              <div class="form__group">
+                <label for="dKegiatan">Pilih Kegiatan</label>
+                <select id="dKegiatan" required></select>
+              </div>
+              <div class="form__group">
+                <label for="dDeskripsi">Deskripsi</label>
+                <textarea id="dDeskripsi" rows="3" required></textarea>
+              </div>
+              <div class="form__group">
+                <label for="dTanggal">Tanggal</label>
+                <input type="date" id="dTanggal" required />
+              </div>
+              <div class="form__group">
+                <label for="dFoto">Foto (bisa pilih lebih dari satu</label>
+                <input
+                  type="file"
+                  id="dFoto"
+                  accept="image/*"
+                  multiple
+                  required
+                />
+              </div>
+              <p id="uploadStatus" class="admin-login__error"></p>
+              <div class="admin-modal__actions">
+                <button
+                  type="button"
+                  id="btnBatalDokumentasi"
+                  class="btn btn--outline-primary"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  id="btnSimpanDokumentasi"
+                  class="btn btn--primary"
+                >
+                  Simpan
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
         <!-- Modal form tambah kegiatan -->
         <div id="modalKegiatan" class="admin-modal" hidden>
           <div class="admin-modal__box">
