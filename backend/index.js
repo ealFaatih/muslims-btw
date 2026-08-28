@@ -8,6 +8,7 @@ const testimoniRoutes = require("./routes/testimoni");
 const faqRoutes = require("./routes/faq");
 const pengaduanRoutes = require("./routes/pengaduan");
 const authRoutes = require("./routes/auth");
+const uploadRoutes = require("./routes/upload");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,6 +21,7 @@ app.use("/api/testimoni", testimoniRoutes);
 app.use("/api/faq", faqRoutes);
 app.use("/api/pengaduan", pengaduanRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/upload", uploadRoutes);
 
 app.get("/", (req, res) => {
   res.end("Server Muslims Btw backend jalan!");
