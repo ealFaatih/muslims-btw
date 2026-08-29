@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               (foto) => `
             <figure>
               <img src="${foto.file_url}" alt="${foto.caption}" />
-              <figcaption>${foto.caption}</figcaption>
+              ${foto.caption ? `<figcaption>${foto.caption}</figcaption>` : ""}
             </figure>
           `,
             )

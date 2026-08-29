@@ -39,6 +39,7 @@ function tampilkanDashboard() {
   dashboardSection.hidden = false;
   muatDaftarKegiatan();
   muatDaftarPengaduan();
+  muatDaftarDokumentasi();
 }
 
 function tampilkanLogin() {
@@ -126,15 +127,23 @@ async function muatDaftarKegiatan() {
 }
 
 // Ambil & Tampilkan daftar pengaduan
-async function muatDaftarKegiatan() {
+async function muatDaftarPengaduan() {
   const token = localStorage.getItem("adminToken");
 
   try {
-    const response = await fetch(`${API_BASE}`, {
+    const response = await fetch(`${API_BASE}/pengaduan`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
     if (!response.ok) {
+      tabelPengaduan.innerHTML =
+        '<tr><td colspan="5">Gagal memuat laporan.</td></tr>';
+      return;
+    }
+
+    const daftarPengaduan = await response.json();
+
+    if (daftarPengaduan.length === 0) {
       tabelPengaduan.innerHTML =
         '<tr><td colspan="5">Belum ada laporan masuk.</td></tr>';
       return;
@@ -167,6 +176,35 @@ async function muatDaftarKegiatan() {
   }
 }
 
+async function muatDaftarDokumentasi() {
+  try {
+    const response = await fetch(`${API_BASE}/dokumentasi`);
+    const daftarDokumentasi = await response.json();
+
+    if (daftarDokumentasi.length === 0) {
+      tabelDokumentasi.innerHTML =
+        '<tr><td colspan="3">Belum ada dokumentasi.</td></tr>';
+      return;
+    }
+
+    tabelDokumentasi.innerHTML = daftarDokumentasi
+      .map(
+        (d) => `
+    <tr>
+    <td>${d.judul_kegiatan}</td>
+    <td>${new Date(d.tanggal).toLocaleDateString("id-ID")}</td>
+    <td>${d.galeri.length} foto</td>
+    </tr>
+    `,
+      )
+      .join("");
+  } catch (error) {
+    tabelDokumentasi.innerHTML =
+      '<tr><td colspan="3">Gagal memuat data.</td></tr>';
+    console.error(error);
+  }
+}
+
 // Submit form tambah kegiatan
 formKegiatan.addEventListener("submit", async function (e) {
   e.preventDefault();
@@ -194,7 +232,7 @@ formKegiatan.addEventListener("submit", async function (e) {
 
     if (!response.ok) {
       const hasil = await response.json();
-      alert("Gagal manambah kegiatan: " + hasil.pesan);
+      alert("Gagal menambah kegiatan: " + hasil.pesan);
       return;
     }
 
@@ -279,7 +317,7 @@ formDokumentasi.addEventListener("submit", async function (e) {
     // Tahap 1 - Upload semua foto ke Cloudinary
     const urlFotoSemua = [];
     for (const file of fileFoto) {
-      const formData = new formData();
+      const formData = new FormData();
       formData.append("foto", file);
 
       const resUpload = await fetch(`${API_BASE}/upload`, {
