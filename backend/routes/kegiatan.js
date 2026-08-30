@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 const verifyToken = require("../middleware/verifyToken");
+const { body, validationResult } = require("express-validator");
 
 router.get("/", async (req, res) => {
   try {
@@ -28,20 +29,25 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", verifyToken, async (req, res) => {
-  try {
-    const {
-      judul,
-      deskripsi,
-      tanggal,
-      lokasi,
-      kuota,
-      status_pendaftaran,
-      poster_url,
-    } = req.body;
-    const [result] = await db.query(
-      "INSERT INTO kegiatan (judul, deskripsi, tanggal, lokasi, kuota, status_pendaftaran, poster_url) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [
+router.post(
+  "/",
+  verifyToken,
+  [
+    body("judul").trim().notEmpty().withMessage("Judul wajib diisi"),
+    body("tanggal").isISO8601().withMessage("Format tanggal tidak valid"),
+    body("kuota")
+      .optional()
+      .isInt({ min: 0 })
+      .withMessage("Kuota harus angka positif"),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ pesan: errors.array()[0].msg });
+    }
+
+    try {
+      const {
         judul,
         deskripsi,
         tanggal,
@@ -49,15 +55,27 @@ router.post("/", verifyToken, async (req, res) => {
         kuota,
         status_pendaftaran,
         poster_url,
-      ],
-    );
-    res
-      .status(201)
-      .json({ pesan: "Kegiatan berhasil ditambahkan", id: result.insertId });
-  } catch (error) {
-    res.status(500).json({ pesan: error.message });
-  }
-});
+      } = req.body;
+      const [result] = await db.query(
+        "INSERT INTO kegiatan (judul, deskripsi, tanggal, lokasi, kuota, status_pendaftaran, poster_url) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        [
+          judul,
+          deskripsi,
+          tanggal,
+          lokasi,
+          kuota,
+          status_pendaftaran,
+          poster_url,
+        ],
+      );
+      res
+        .status(201)
+        .json({ pesan: "Kegiatan berhasil ditambahkan", id: result.insertId });
+    } catch (error) {
+      res.status(500).json({ pesan: error.message });
+    }
+  },
+);
 
 router.put("/:id", verifyToken, async (req, res) => {
   try {
