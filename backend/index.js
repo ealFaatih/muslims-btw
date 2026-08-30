@@ -45,7 +45,10 @@ app.get("/test-db", async (req, res) => {
     const [rows] = await db.query("SHOW TABLES");
     res.json({ status: "sukses", tabel: rows });
   } catch (error) {
-    res.status(500).json({ status: "gagal", pesan: error.message });
+    console.error(error);
+    res
+      .status(500)
+      .json({ status: "gagal", pesan: "Terjadi kesalahan pada server" });
   }
 });
 

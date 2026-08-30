@@ -11,7 +11,8 @@ router.get("/", async (req, res) => {
     );
     res.json(rows);
   } catch (error) {
-    res.status(500).json({ pesan: error.message });
+    console.error(error);
+    res.status(500).json({ pesan: "Terjadi kesalahan pada server" });
   }
 });
 
@@ -25,7 +26,8 @@ router.get("/:id", async (req, res) => {
     }
     res.json(rows[0]);
   } catch (error) {
-    res.status(500).json({ pesan: error.message });
+    console.error(error);
+    res.status(500).json({ pesan: "Terjadi kesalahan pada server" });
   }
 });
 
@@ -72,7 +74,8 @@ router.post(
         .status(201)
         .json({ pesan: "Kegiatan berhasil ditambahkan", id: result.insertId });
     } catch (error) {
-      res.status(500).json({ pesan: error.message });
+      console.error(error);
+      res.status(500).json({ pesan: "Terjadi kesalahan pada server" });
     }
   },
 );
@@ -103,7 +106,8 @@ router.put("/:id", verifyToken, async (req, res) => {
     );
     res.json({ pesan: "Kegiatan berhasil diperbarui" });
   } catch (error) {
-    res.status(500).json({ pesan: error.message });
+    console.error(error);
+    res.status(500).json({ pesan: "Terjadi kesalahan pada server" });
   }
 });
 
@@ -112,7 +116,8 @@ router.delete("/:id", verifyToken, async (req, res) => {
     await db.query("DELETE FROM kegiatan WHERE id=?", [req.params.id]);
     res.json({ pesan: "Kegiatan berhasil dihapus" });
   } catch (error) {
-    res.status(500).json({ pesan: error.message });
+    console.error(error);
+    res.status(500).json({ pesan: "Terjadi kesalahan pada server" });
   }
 });
 

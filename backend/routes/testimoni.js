@@ -9,7 +9,8 @@ router.get("/", async (req, res) => {
     );
     res.json(rows);
   } catch (error) {
-    res.status(500).json({ pesan: error.message });
+    console.error(error);
+    res.status(500).json({ pesan: "Terjadi kesalahan pada server" });
   }
 });
 

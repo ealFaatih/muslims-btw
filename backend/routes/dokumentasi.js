@@ -22,7 +22,8 @@ router.get("/", async (req, res) => {
 
     res.json(hasil);
   } catch (error) {
-    res.status(500).json({ pesan: error.message });
+    console.error(error);
+    res.status(500).json({ pesan: "Terjadi kesalahan pada server" });
   }
 });
 
@@ -53,7 +54,8 @@ router.post("/", verifyToken, async (req, res) => {
       .status(201)
       .json({ pesan: "Dokumentasi berhasil ditambahkan", id: dokumentasiId });
   } catch (error) {
-    res.status(500).json({ pesan: error.message });
+    console.error(error);
+    res.status(500).json({ pesan: "Terjadi kesalahan pada server" });
   }
 });
 
