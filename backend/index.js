@@ -24,7 +24,14 @@ const limiterPengaduan = rateLimit({
   max: 10,
 });
 
-app.use(cors());
+const corsOptions = {
+  origin: [
+    "https://chipper-starburst-9b1702.netlify.app",
+    "http://127.0.0.1:5500", // biar tetap bisa tes dari Live Server lokal
+  ],
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/api/kegiatan", kegiatanRoutes);
 app.use("/api/dokumentasi", dokumentasiRoutes);
