@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("formAduan");
-  const API_URL = "http://localhost:3000/api/pengaduan";
+  const API_URL = "https://muslims-btw-production.up.railway.app/api/pengaduan";
 
   form.addEventListener("submit", async function (e) {
     e.preventDefault();

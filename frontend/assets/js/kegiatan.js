@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/api/kegiatan";
+const API_URL = "https://muslims-btw-production.up.railway.app/api/kegiatan";
 
 async function tampilkanKegiatan() {
   const container = document.querySelector(".upcoming__grid");

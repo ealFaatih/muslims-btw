@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async function () {
   const container = document.querySelector(".faq__list");
-  const API_URL = "http://localhost:3000/api/faq";
+  const API_URL = "https://muslims-btw-production.up.railway.app/api/faq";
 
   try {
     const response = await fetch(API_URL);

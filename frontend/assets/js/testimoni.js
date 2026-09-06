@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async function () {
   const container = document.querySelector(".testimoni__grid");
-  const API_URL = "http://localhost:3000/api/testimoni";
+  const API_URL = "https://muslims-btw-production.up.railway.app/api/testimoni";
 
   try {
     const response = await fetch(API_URL);

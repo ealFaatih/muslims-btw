@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async function () {
   const calendarEl = document.getElementById("calendar");
-  const API_URL = "http://localhost:3000/api/kegiatan";
+  const API_URL = "https://muslims-btw-production.up.railway.app/api/kegiatan";
 
   try {
     const response = await fetch(API_URL);
